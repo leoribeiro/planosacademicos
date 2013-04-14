@@ -64,6 +64,7 @@ class PAPlanoEtapa extends CActiveRecord
 			'relProfessor' => array(self::BELONGS_TO, 'Professor', 'professor'),
 			'relDisciplina' => array(self::BELONGS_TO, 'Disciplina', 'disciplina'),
 			'relTurma' => array(self::BELONGS_TO, 'Turma', 'turma'),
+			'relPA' => array(self::HAS_MANY, 'PAPlanoAvaliacao', 'id_plano'),
 		);
 	}
 

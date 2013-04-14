@@ -53,7 +53,8 @@ class PAPlanoAula extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'relPlano' => array(self::HAS_MANY, 'PAPlanoEtapa', 'id_plano'),
+			'relPlano' => array(self::BELONGS_TO, 'PAPlanoEtapa', 'id_plano'),
+			'relAula' => array(self::BELONGS_TO, 'PAAula', 'id_aula'),
 		);
 	}
 

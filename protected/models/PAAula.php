@@ -53,7 +53,7 @@ class PAAula extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'relPlanoAula' => array(self::BELONGS_TO, 'PAPlanoAula', 'id_aula'),
+			'relPlanoAula' => array(self::HAS_MANY, 'PAPlanoAula', 'id_aula'),
 		);
 	}
 
@@ -92,8 +92,8 @@ class PAAula extends CActiveRecord
 		));
 	}
 
-public function behaviors()
-{
-    return array('datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior')); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
-}
+	public function behaviors()
+	{
+	    return array('datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior'));
+	}
 }

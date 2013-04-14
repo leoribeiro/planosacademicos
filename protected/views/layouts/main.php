@@ -17,7 +17,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
 
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+	<title>Sistema de Planejamento de Etapa</title>
 </head>
 
 <body>
@@ -44,8 +44,24 @@
 	    'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
 	    'stacked'=>false, 
 		'items'=>array(
+			array('label'=>'Calendário', 'url'=>array('/site/calendar')),
 			array('label'=>'Planos de etapa', 'url'=>array('/pAPlanoEtapa/planos')),
 			array('label'=>'Meus planos de etapa', 'url'=>array('/pAPlanoEtapa/admin'),'visible'=>(!$isGuest)),
+			array('label'=>'Minhas avaliações', 'url'=>'#',
+	        	'items'=>array(
+	                         array('label'=>'Avaliações previstas', 'url'=>array('/PAAvaliacao/admin','marcada'=>'false'),'visible'=>(!$isGuest)),
+	                         array('label'=>'Avaliações marcadas', 'url'=>array('/PAAvaliacao/admin','marcada'=>'true'),'visible'=>(!$isGuest)),
+	                         array('label'=>'Histórico', 'url'=>array('/PAAvaliacao/adminHistorico'),'visible'=>(!$isGuest)),
+	                      ),'visible'=>(!$isGuest)
+	        ),
+	        array('label'=>'Administração', 'items'=>array(
+		            	array('label'=>'Disciplina', 'url'=>array('/Disciplina/admin')),
+						array('label'=>'Departamento', 'url'=>array('/Departamento/admin')),
+		            	array('label'=>'Modalidade', 'url'=>array('/Modalidade/admin')),
+						array('label'=>'Turma', 'url'=>array('/Turma/admin')),
+						array('label'=>'Turno', 'url'=>array('/Turno/admin')),
+						array('label'=>'Horário', 'url'=>array('/Horario/admin')),
+				),'visible'=>$isAdmin),
 			array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 			array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 		),

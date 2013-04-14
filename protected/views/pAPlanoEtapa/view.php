@@ -22,7 +22,7 @@
     //'htmlOptions'=>array('class'=>'well'),
 	//'enableAjaxValidation'=>false,
 )); ?>
-<br /><br />
+<br />
 
 <?php echo $this->renderPartial('_formPlanoAula', array('model'=>$model,'aulas'=>$aulas,'avs'=>$avs,'viewT'=>true)); ?>
 <?php $this->endWidget(); ?>

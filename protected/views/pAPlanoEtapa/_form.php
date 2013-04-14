@@ -13,7 +13,7 @@
 		$modelAux = Professor::model()->with('relServidor')->findAll(array('order'=>'relServidor.NMServidor'));
 		$data = CHtml::listData($modelAux,'CDProfessor','relServidor.NMServidor');
 
-		echo $form->dropDownListRow($model,'professor',$data,array('class'=>'chzn-select','style'=>'width:300px','empty'=>'Selecione uma opção')); 
+		echo $form->dropDownListRow($model,'professor',$data,array('class'=>'chzn-select','style'=>'width:300px','empty'=>'Selecione um professor')); 
 	}
 	else{
 		$criteria = new CDbCriteria();
@@ -29,14 +29,26 @@
 
 	echo "<br /><br />";
 
-	echo $form->dropDownListRow($model,'turma',$data,array('class'=>'chzn-select','style'=>'width:300px','empty'=>'Selecione uma opção')); 
+	echo $form->dropDownListRow($model,'turma',$data,array(
+		'class'=>'chzn-select',
+		'style'=>'width:300px',
+		'empty'=>'Selecione uma turma',
+		'ajax' => array(
+			'type'=>'POST', //request type
+			'dataType'=>'html',
+			'url'=>CController::createUrl('atualizaDisciplinas'),
+			'success'=>'js:function(data){upDisciplinas(data)}',
+			'data'=>'js:$("#planoForm").serialize()',
+			),
+
+	));
 
 	$modelAux = Disciplina::model()->findAll(array('order'=>'NMDisciplina'));
 	$data = CHtml::listData($modelAux,'CDDisciplina','NMDisciplina');
 
 	echo "<br /><br />";
 
-	echo $form->dropDownListRow($model,'disciplina',$data,array('class'=>'chzn-select','style'=>'width:300px','empty'=>'Selecione uma opção')); 
+	echo $form->dropDownListRow($model,'disciplina',$data,array('class'=>'chzn-select','style'=>'width:300px','empty'=>'Selecione uma disciplina')); 
 
 	echo "<br /><br />";
 
@@ -48,5 +60,13 @@
 
 	?>
 	</fieldset>
+
+	<script type="text/javascript">
+		function upDisciplinas(resultado){
+			$("#PAPlanoEtapa_disciplina").html(resultado);
+			$("#PAPlanoEtapa_disciplina").trigger("liszt:updated");
+			$("#PAPlanoEtapa_disciplina").chosen();
+		}
+	</script>
 
 

@@ -107,4 +107,58 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+	public function actionCalendar(){
+
+		if(isset($_POST['ControleAntProx'])){
+			$month = Yii::app()->session['monthCal'];
+			$year = Yii::app()->session['yearCal'];
+			$turma = Yii::app()->session['turmaCal'];
+			if($_POST['ControleAntProx'] == 1){
+				if($month == 1)
+				{
+					$month = 12;
+					$year = $year - 1;
+				}
+				else
+				{
+					$month = $month - 1;
+				}
+			}
+			else if($_POST['ControleAntProx'] == 2){
+				if($month == 12)
+				{
+					$month = 1;
+					$year = $year + 1;
+				}
+				else
+				{
+					$month = $month + 1;
+				}
+			}
+		}
+		// inicialmente, mes corrente e ano corrente
+		else {
+
+			$month = date('m', time());
+			$year = date('Y', time());
+			if(isset($_POST['CDTurma'])){
+				$turma = $_POST['CDTurma'];
+			}
+			else if (isset($_POST['MarcacaoProva']['CDTurma'])) {
+				$turma = $_POST['MarcacaoProva']['CDTurma'];
+			}
+			else{
+				$lista = Turma::model()->find(array(
+				    'select'=>'CDTurma','order'=>'NMTurma'
+				));
+				$turma = $lista->CDTurma;
+			}
+
+		}
+		if(isset($_GET['partial']))
+			$this->renderPartial('calendar',array('turma'=>$turma,'month'=>$month,'year'=>$year),false,true);
+		else
+			$this->render('calendar',array('turma'=>$turma,'month'=>$month,'year'=>$year));
+	}
 }

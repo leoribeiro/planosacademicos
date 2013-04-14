@@ -273,6 +273,21 @@ div.search-form
   text-rendering: optimizelegibility;
 }
 
+table#calendar tr.daynames td
+{
+	width: 50px;
+	height: 25px;
+	background-color: #FAFAFA;
+	text-align: center;
+
+}
+
+table#calendar tr.week td
+{
+	height: 95px;
+	width: 80px;
+}
+
 
 
 

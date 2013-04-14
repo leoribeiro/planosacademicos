@@ -35,12 +35,12 @@ class PAPlanoEtapaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete','atualizaDisciplinas'),
 				//'users'=>array('admin'),
 				'roles'=>array('professor'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete','atualizaDisciplinas'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -539,5 +539,39 @@ class PAPlanoEtapaController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	public function actionAtualizaDisciplinas()
+	{
+
+		if($_POST['PAPlanoEtapa']['turma'] == "")
+			$turma = null;
+		else
+		    $turma = $_POST['PAPlanoEtapa']['turma'];
+		
+		if($_POST['PAPlanoEtapa']['disciplina'] == "")
+			$disc = null;
+		else
+		    $disc = $_POST['PAPlanoEtapa']['disciplina'];
+		
+		$resultado = Disciplina::model()->with('relTurmaDisciplina')->findAll(
+		 array('order'=>'NMDisciplina','condition'=>'relTurmaDisciplina.CDTurma=:TUR',
+	    'params'=>array(':TUR'=>$turma)));
+	
+	    $data=CHtml::listData($resultado,'CDDisciplina','NMDisciplina');
+		echo CHtml::tag('option',
+	                   array('value'=>''),CHtml::encode('Selecione uma disciplina'),true);
+	    foreach($data as $value=>$name)
+	    {
+			if($disc == $value){
+				echo CHtml::tag('option',
+	                   array('value'=>$value,'selected'=>'selected'),CHtml::encode($name),true);
+			}
+			else 
+	        	echo CHtml::tag('option',
+	                   array('value'=>$value),CHtml::encode($name),true);
+	    }	
+	
+		
 	}
 }

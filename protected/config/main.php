@@ -10,7 +10,7 @@ Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
 
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'Planos Academicos',
+	'name'=>'Sistema de Planejamento de Etapa',
 	'language' => 'pt_br',
 	'sourceLanguage' => 'pt_br',
 
@@ -28,8 +28,6 @@ return array(
 		'Requerimentos.models.AlunoGraduacao',
 		'Requerimentos.models.CursoGraduacao',
 		'Requerimentos.models.CursoTecnico',
-		'MarcacaoProva.models.Turma',
-		'MarcacaoProva.models.Disciplina',
 		'RecursosHumanos.models.RH_ServidorStatus',
 	),
 
