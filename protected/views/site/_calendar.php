@@ -146,13 +146,18 @@ $modelTurma = Turma::model()->findByPk($turma);
 			'url'=>CController::createUrl('calendar',array('partial'=>true)),
 			'update'=>'#calendar_wrapper',
 			'data'=>'js:{\'CDTurma\': $(this).val()}',
+			'beforeSend' => 'function(){
+	      	$("#loaddiv").addClass("loading");}',
+	    	'complete' => 'function(){
+	      	$("#loaddiv").removeClass("loading");}',
 			),
 		'id' => 'send-link-'.uniqid(),
 
 	));
 ?>
 </div>
-<br />
+<div id="loaddiv" style="height: 20px; 
+	width: 20px;"></div>
  <table id="calendar" class="table table-bordered table-striped">
  <tr><td><div align="center" >
  <?php
@@ -161,6 +166,10 @@ $modelTurma = Turma::model()->findByPk($turma);
 	    'type' => 'POST',
 		'data' => array('ControleAntProx' => '1'),
 	    'update'=>'#calendar_wrapper',
+	    'beforeSend' => 'function(){
+	      $("#loaddiv").addClass("loading");}',
+	    'complete' => 'function(){
+	      $("#loaddiv").removeClass("loading");}',
 	  ),
 	  array(
 	  	'id' => 'send-link-'.uniqid(),
@@ -175,6 +184,10 @@ $modelTurma = Turma::model()->findByPk($turma);
 	    'type' => 'POST',
 		'data' => array('ControleAntProx' => '2'),
 	    'update'=>'#calendar_wrapper',
+	    'beforeSend' => 'function(){
+	      $("#loaddiv").addClass("loading");}',
+	    'complete' => 'function(){
+	      $("#loaddiv").removeClass("loading");}',
 	  ),
 	  array(
 	  	'id' => 'send-link-'.uniqid(),
@@ -238,7 +251,11 @@ foreach($weeks as $week){
 					        $this->createUrl('PAMarcacaoProva/viewM',array('id'=>$registro->CDMarcacao)),
 						        array(
 						        	//'dataType'=>'html',
-						            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}'
+						            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}',
+						            'beforeSend' => 'function(){
+								      $("#loaddiv").addClass("loading");}',
+								    'complete' => 'function(){
+								      $("#loaddiv").removeClass("loading");}',
 						        ),
 						        array('id' => 'link-'.uniqid(),'title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
 						);
@@ -280,7 +297,11 @@ foreach($weeks as $week){
 					        $this->createUrl('PAMarcacaoProva/viewM',array('id'=>$registro->CDMarcacao)),
 						        array(
 						        	//'dataType'=>'html',
-						            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}'
+						            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}',
+						            'beforeSend' => 'function(){
+								      $("#loaddiv").addClass("loading");}',
+								    'complete' => 'function(){
+								      $("#loaddiv").removeClass("loading");}',
 						        ),
 						        array('id' => 'link-'.uniqid(),'title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
 							);
