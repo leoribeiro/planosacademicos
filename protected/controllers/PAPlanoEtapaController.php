@@ -441,6 +441,10 @@ class PAPlanoEtapaController extends Controller
 		$criteria->addInCondition('id',$idsAv);
 		$num = PAAvaliacao::model()->deleteAll($criteria);
 
+		$criteria = new CDbCriteria();
+		$criteria->addInCondition('id_avaliacao',$idsAv);
+		$num = PA_MarcacaoProva::model()->deleteAll($criteria);
+
 	}
 
 	/**

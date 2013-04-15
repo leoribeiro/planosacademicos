@@ -288,6 +288,48 @@ table#calendar tr.week td
 	width: 80px;
 }
 
+table#calendar td.today
+{
+	color: white;
+
+	background: #3F5D7D;
+	vertical-align: top;
+	padding: 1px 1px 1px 1px;
+}
+
+table#calendar td.dayf
+{
+	color: white;
+	
+	background: #990000;
+	vertical-align: top;
+	padding: 1px 1px 1px 1px;
+}
+
+.dayf a { color: white;}
+.dayf a:visited { color: white; }
+.dayf a:hover { color: white; }
+.dayf a:active { color: white; }
+
+table#calendar td.dayd
+{
+	color: white;
+
+	background: #FF9900;
+	vertical-align: top;
+	padding: 1px 1px 1px 1px;
+}
+
+.dayd a { color: white;}
+.dayd a:visited { color: white; }
+.dayd a:hover { color: white; }
+.dayd a:active { color: white; }
+
+.today a { color: white;}
+.today a:visited { color: white; }
+.today a:hover { color: white; }
+.today a:active { color: white; }
+
 
 
 

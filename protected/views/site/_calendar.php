@@ -147,6 +147,7 @@ $modelTurma = Turma::model()->findByPk($turma);
 			'update'=>'#calendar_wrapper',
 			'data'=>'js:{\'CDTurma\': $(this).val()}',
 			),
+		'id' => 'send-link-'.uniqid(),
 
 	));
 ?>
@@ -160,6 +161,9 @@ $modelTurma = Turma::model()->findByPk($turma);
 	    'type' => 'POST',
 		'data' => array('ControleAntProx' => '1'),
 	    'update'=>'#calendar_wrapper',
+	  ),
+	  array(
+	  	'id' => 'send-link-'.uniqid(),
 	  )
  );
 ?>
@@ -171,6 +175,9 @@ $modelTurma = Turma::model()->findByPk($turma);
 	    'type' => 'POST',
 		'data' => array('ControleAntProx' => '2'),
 	    'update'=>'#calendar_wrapper',
+	  ),
+	  array(
+	  	'id' => 'send-link-'.uniqid(),
 	  )
 	);
  ?>
@@ -233,7 +240,7 @@ foreach($weeks as $week){
 						        	//'dataType'=>'html',
 						            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}'
 						        ),
-						        array('id'=>'showJuiDialog','title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
+						        array('id' => 'link-'.uniqid(),'title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
 						);
 					}
 					$tabela.= '</ul>';
@@ -269,26 +276,14 @@ foreach($weeks as $week){
 							   $disc = substr_replace($disc, '...', 13);
 						    }
 							$tabela.= '<li>';
-							if(count($lista)>=2){
-								$tabela.= CHtml::ajaxLink($disc.$tipoturma,
-						        $this->createUrl('PAMarcacaoProva/viewM',array('id'=>$registro->CDMarcacao)),
-							        array(
-							        	//'dataType'=>'html',
-							            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}'
-							        ),
-							        array('id'=>'showJuiDialog','title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
-								);
-						    }
-						    else {
-						    	$tabela.= CHtml::ajaxLink($disc.$tipoturma,
-						        $this->createUrl('PAMarcacaoProva/viewM',array('id'=>$registro->CDMarcacao)),
-							        array(
-							        	//'dataType'=>'html',
-							            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}'
-							        ),
-							        array('id'=>'showJuiDialog','title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
-								);
-						}
+					    	$tabela.= CHtml::ajaxLink($disc.$tipoturma,
+					        $this->createUrl('PAMarcacaoProva/viewM',array('id'=>$registro->CDMarcacao)),
+						        array(
+						        	//'dataType'=>'html',
+						            'success'=>'function(r){$("#juiDialog").html(r).dialog({ width: 600, heigth: 450 }).dialog("open"); return false;}'
+						        ),
+						        array('id' => 'link-'.uniqid(),'title'=>CHtml::encode($registro->relDisciplina->NMDisciplina))
+							);
 							$tabela.= '</li>';
 					}
 					$tabela.= '</ul>';
