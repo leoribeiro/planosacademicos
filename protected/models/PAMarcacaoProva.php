@@ -146,32 +146,34 @@ class PAMarcacaoProva extends CActiveRecord
 		));
 	}
 
-	public function beforeSave() {
-			/*
-			Função para subtrair datas em dias
-			Data no formato Y-m-d
-			*/
-			function dtSubtrair($data,$dias) {
-			$data = str_replace("-","",$data);
-			$ano = substr ( $data, 0, 4 );
-			$mes = substr ( $data, 4, 2 );
-			$dia = substr ( $data, 6, 2 );
-			$novaData = mktime ( 0, 0, 0, $mes, $dia - $dias, $ano );
-			return strftime("%Y-%m-%d", $novaData);
-			}
+				/*
+	Função para subtrair datas em dias
+	Data no formato Y-m-d
+	*/
+	function dtSubtrair($data,$dias) {
+		$data = str_replace("-","",$data);
+		$ano = substr ( $data, 0, 4 );
+		$mes = substr ( $data, 4, 2 );
+		$dia = substr ( $data, 6, 2 );
+		$novaData = mktime ( 0, 0, 0, $mes, $dia - $dias, $ano );
+		return strftime("%Y-%m-%d", $novaData);
+	}
 
-			/*
-			Função para somar datas em dias
-			Data no formato Y-m-d
-			*/
-			function dtSomar($data,$dias) {
-			$data = str_replace("-","",$data);
-			$ano = substr ( $data, 0, 4 );
-			$mes = substr ( $data, 4, 2 );
-			$dia = substr ( $data, 6, 2 );
-			$novaData = mktime ( 0, 0, 0, $mes, $dia + $dias, $ano );
-			return strftime("%Y-%m-%d", $novaData);
-			}
+		/*
+	Função para somar datas em dias
+	Data no formato Y-m-d
+	*/
+	function dtSomar($data,$dias) {
+		$data = str_replace("-","",$data);
+		$ano = substr ( $data, 0, 4 );
+		$mes = substr ( $data, 4, 2 );
+		$dia = substr ( $data, 6, 2 );
+		$novaData = mktime ( 0, 0, 0, $mes, $dia + $dias, $ano );
+		return strftime("%Y-%m-%d", $novaData);
+	}
+
+	public function beforeSave() {
+
 
 			// Coloca a data no formato do BD
 			if($this->data != ''){
@@ -191,8 +193,8 @@ class PAMarcacaoProva extends CActiveRecord
 			// verifica quantidade de provas por semana
 			$data = strtotime($this->data);
 			$w = date("w",$data);
-			$dtant = dtSubtrair($this->data,$w)."<br>";
-			$dtdep = dtSomar($this->data,6-$w)."<br>";
+			$dtant = $this->dtSubtrair($this->data,$w)."<br>";
+			$dtdep = $this->dtSomar($this->data,6-$w)."<br>";
 			if(isset($this->CDMarcacao)){
 		     	$lista = PAMarcacaoProva::model()->findAll(array(
 				    'select'=>'CDMarcacao,data',

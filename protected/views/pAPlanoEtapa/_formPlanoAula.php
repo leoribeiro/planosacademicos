@@ -136,8 +136,11 @@ array('id'=>'modalAv')); ?>
 	var aulas = new Object();
 	var viewT = false;
 
+	var idAvMarcada;
+
 	$(document).ready(function()
     {
+    	idAvMarcada = 0;
     	<?php
 	        if(isset($viewT)){
 				echo 'viewT = true;';
@@ -170,12 +173,14 @@ array('id'=>'modalAv')); ?>
 						echo '$("#av_nombre").val('.json_encode($avs[0][$x][$y]).');';
 						echo '$("#av_valor").val('.json_encode($avs[1][$x][$y]).');';
 						echo 'bimestreAtual = '.json_encode($avs[2][$x]).';';
+						echo 'idAvMarcada = '.json_encode($avs[3][$x][$y]).';';
 						echo 'addAv();';
 					}
 				}
 			}
 
 		?>
+		idAvMarcada = 0;
     });
 
     function botoes(bimestre){
@@ -284,10 +289,12 @@ array('id'=>'modalAv')); ?>
 			for(x=0;x<idAv[b];x++){
 				idNome = 'nomeAv'+x+'bim'+b;
 				idValor = 'valorAv'+x+'bim'+b;
+				idId = 'idAv'+x+'bim'+b;
 
 				var nome = $('#'+idNome).val();
 				var valor = $('#'+idValor).val();
-				addLinhaTabelaAv(x+1,nome,valor,b);
+				var idAid = $('#'+idId).val();
+				addLinhaTabelaAv(x+1,nome,valor,b,idAid);
 			}
 		}
 		else{
@@ -345,6 +352,7 @@ array('id'=>'modalAv')); ?>
 		var b = bimestreAtual;
 		idNome = 'nomeAv'+idA+'bim'+bimestreAtual;
 		idValor = 'valorAv'+idA+'bim'+bimestreAtual;
+		idId = 'idAv'+idA+'bim'+bimestreAtual;
 
 		$('<input>').attr({
 		    type: 'hidden',
@@ -358,14 +366,20 @@ array('id'=>'modalAv')); ?>
 		    name: 'valorAv'+b+'bim[]'
 		}).appendTo('#planoForm');
 
+		$('<input>').attr({
+		    type: 'hidden',
+		    id: idId,
+		    name: 'idAv'+b+'bim[]'
+		}).appendTo('#planoForm');
+
 		if(idA == 0){
 			$("#div_av"+bimestreAtual).append(criaTabelaAv(b));
 		}
 
 		$('#'+idNome).val($("#av_nombre").val());
 		$('#'+idValor).val($("#av_valor").val());
-
-		addLinhaTabelaAv(idA+1,$('#'+idNome).val(),$('#'+idValor).val(),b);
+		$('#'+idId).val(idAvMarcada);
+		addLinhaTabelaAv(idA+1,$('#'+idNome).val(),$('#'+idValor).val(),b,idAvMarcada);
 
 
 
@@ -445,19 +459,24 @@ array('id'=>'modalAv')); ?>
 		for(x=idA;x<(idAv[b]-1);x++){
 			idNome = 'nomeAv'+idA+'bim'+b;
 			idValor = 'valorAv'+idA+'bim'+b;
+			idId = 'idAv'+idA+'bim'+b;
 
 			idNome2 = 'nomeAv'+(idA+1)+'bim'+b;
 			idValor2 = 'valorAv'+(idA+1)+'bim'+b;
+			idId2 = 'idAv'+(idA+1)+'bim'+b;
 
 			$('#'+idNome).val($('#'+idNome2).val());
 			$('#'+idValor).val($('#'+idValor2).val());
+			$('#'+idId).val($('#'+idId2).val());
 		}
 		idA = idAv[b]-1;
 		idNome = 'nomeAv'+idA+'bim'+b;
 		idValor = 'valorAv'+idA+'bim'+b;
+		idId = 'idAv'+idA+'bim'+b;
 
 		$('#'+idNome).remove();
 		$('#'+idValor).remove();
+		$('#'+idId).remove();
 
 		idAv[b]--;
 
@@ -480,12 +499,30 @@ array('id'=>'modalAv')); ?>
 		$('#tabelaAulas'+b+' > tbody:last').append(content);
 	}
 
-	function addLinhaTabelaAv(numAv,nombre,valor,b){
+	function addLinhaTabelaAv(numAv,nombre,valor,b,idAv){
 		var content = "<tr><td id=\"numAv\">"+numAv+"</td>";
 		content += "<td>"+nombre+"</td>";
 		content += "<td>"+valor+"</td>";
 		if(!viewT){
-			content += "<td><i class=\"icon-pencil\" style=\"cursor: pointer;\" data-toggle=\"modal\" data-target=\"#modalAv\" onClick=\"editarAv("+(numAv-1)+","+b+")\"></i>&nbsp;<i class=\"icon-remove\" style=\"cursor: pointer;\" onClick=\"deletarAv("+(numAv-1)+","+b+")\" ></i></td></tr>";
+			result = 1;
+			//alert(idAv);
+			if(idAv != 0){
+				$.ajax({
+	                  url: '<?php echo $this->createUrl("//PAMarcacaoProva/provaHistorico/");?>',
+	                  type: 'GET',
+	                  async: false,
+	                  data: 'idAv='+idAv,
+	                    success: function(r) {
+	                        result = r;
+	            }});
+			}
+			if(result == 1){
+				content += "<td><i class=\"icon-pencil\" style=\"cursor: pointer;\" data-toggle=\"modal\" data-target=\"#modalAv\" onClick=\"editarAv("+(numAv-1)+","+b+")\"></i>&nbsp;<i class=\"icon-remove\" style=\"cursor: pointer;\" onClick=\"deletarAv("+(numAv-1)+","+b+")\" ></i></td></tr>";
+			}
+			else{
+				content += "<td><div align=center><i class=\"icon-certificate\" title=\"Avaliação não pode ser modificada\"  ></i></div></td></tr>";
+			}
+
 		}
 		$('#tabelaAv'+b+' > tbody:last').append(content);
 	}

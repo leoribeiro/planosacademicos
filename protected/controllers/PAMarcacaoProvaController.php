@@ -36,7 +36,7 @@ class PAMarcacaoProvaController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','atualizahorariosForm','admin','adminHistorico','delete'),
+				'actions'=>array('create','update','atualizahorariosForm','admin','adminHistorico','delete','provaHistorico'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -281,5 +281,29 @@ class PAMarcacaoProvaController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	public function actionProvaHistorico(){
+		$idAv = $_GET['idAv'];
+		$criteria = new CDbCriteria();
+		$criteria->compare('id_avaliacao',$idAv);
+		$criteria->compare('data','>='.date('Y-m-d'));
+		$model = PAMarcacaoProva::model()->find($criteria);
+
+		$criteria = new CDbCriteria();
+		$criteria->compare('id_avaliacao',$idAv);
+		$model2 = PAMarcacaoProva::model()->find($criteria);
+		$valor = 0;
+		if(is_null($model)){
+			if(!is_null($model2))
+				$valor = 0;
+			else{
+				$valor = 1;
+			}
+		}
+		else
+			$valor = 1;
+			echo $valor;
+		
 	}
 }

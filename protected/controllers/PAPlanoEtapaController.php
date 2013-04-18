@@ -69,6 +69,7 @@ class PAPlanoEtapaController extends Controller
 		$dataAulabim = array();
 		$conteudoAulabim = array();
 		$materialAulabim = array();
+		$idAvbim = array();
 		$nomeAvbim = array();
 		$valorAvbim = array();
 		$bimAula = array();
@@ -93,11 +94,13 @@ class PAPlanoEtapaController extends Controller
 		for($x=1;$x<5;$x++){
 			$avs = $this->carregaAvaliacoes($id,$x);
 			if(!is_null($avs)){
-				$d = array(); $c = array(); $m = array();
+				$d = array(); $c = array(); $m = array(); $t = array();
 				foreach($avs as $av){
+					$t[] = $av->id;
 					$d[] = $av->descricao;
 					$c[] = $av->valor;
 				}
+				$idAvbim[] = $t;
 				$nomeAvbim[] = $d;
 				$valorAvbim[] = $c;
 				$bimAv[] = $x;
@@ -113,6 +116,7 @@ class PAPlanoEtapaController extends Controller
 		$avs[] = $nomeAvbim;
 		$avs[] = $valorAvbim;
 		$avs[] = $bimAv;
+		$avs[] = $idAvbim;
 		$this->render('view',array(
 			'model'=>$model,'aulas'=>$aulas,'avs'=>$avs,'userUrl'=>$userUrl
 		));
@@ -240,6 +244,7 @@ class PAPlanoEtapaController extends Controller
 		$dataAulabim = array();
 		$conteudoAulabim = array();
 		$materialAulabim = array();
+		$idAvbim = array();
 		$nomeAvbim = array();
 		$valorAvbim = array();
 		$bimAula = array();
@@ -264,11 +269,13 @@ class PAPlanoEtapaController extends Controller
 		for($x=1;$x<5;$x++){
 			$avs = $this->carregaAvaliacoes($id,$x);
 			if(!is_null($avs)){
-				$d = array(); $c = array(); $m = array();
+				$d = array(); $c = array(); $m = array(); $t = array();
 				foreach($avs as $av){
+					$t[] = $av->id;
 					$d[] = $av->descricao;
 					$c[] = $av->valor;
 				}
+				$idAvbim[] = $t;
 				$nomeAvbim[] = $d;
 				$valorAvbim[] = $c;
 				$bimAv[] = $x;
@@ -282,6 +289,7 @@ class PAPlanoEtapaController extends Controller
 			$dataAulabim = array();
 			$conteudoAulabim = array();
 			$materialAulabim = array();
+			$idAvbim = array();
 			$nomeAvbim = array();
 			$valorAvbim = array();
 			$bimAula = array();
@@ -297,6 +305,7 @@ class PAPlanoEtapaController extends Controller
 					$bimAula[] = $x;
 				}
 				if(isset($_POST['nomeAv'.$x.'bim'])){
+					$idAvbim[] = $_POST['idAv'.$x.'bim'];
 					$nomeAvbim[] = $_POST['nomeAv'.$x.'bim'];
 					$valorAvbim[] = $_POST['valorAv'.$x.'bim'];
 					$bimAv[] = $x;
@@ -309,6 +318,8 @@ class PAPlanoEtapaController extends Controller
 				}
 				else{
 					$model->save();
+
+					$marcadas = $this->carregaAvaliacoesMarcadas($id);
 
 					$this->deletarDependecias($model->id);
 
@@ -335,6 +346,39 @@ class PAPlanoEtapaController extends Controller
 							$mPA->save();
 							$idsAv[] = $mPA->id;
 							$bimAvN[] = $bimAv[$x];
+							if($idAvbim[$x][$y] != 0){
+
+								$idAv = $idAvbim[$x][$y];
+								for($r=0;$r<count($marcadas);$r++){
+									if($idAv == $marcadas[$r][5]){
+										$marcadas[$r][5] = $mPA->id;
+										$marcadas[$r][9] = 1;
+										$mPAupdate = PAAvaliacao::model()->findByPk($mPA->id);
+										$mPAupdate->marcada = 1;
+										$mPAupdate->save();
+										break;
+									}
+								}
+							}
+						}
+					}
+
+					// remarca as provas
+					foreach($marcadas as $m){
+						if($m[9] == 1){
+							$a = new PAMarcacaoProva;
+							$a->CDTipoTurma = $m[0];
+							$DataProva= $m[1];
+							$ar = explode('-', $DataProva);
+							$m[1] = $ar[2].'/'.$ar[1].'/'.$ar[0];
+							$a->data = $m[1];
+							$a->inicio = $m[2];
+							$a->fim = $m[3];
+							$a->id_avaliacao = $m[5];
+							$a->conteudo = $m[6];
+							$a->CDTurma = $m[7];
+							$a->CDDisciplina = $m[8];
+							$a->save();
 						}
 					}
 					for($x=0;$x<count($idsPlanosAula);$x++){
@@ -366,6 +410,7 @@ class PAPlanoEtapaController extends Controller
 		$avs[] = $nomeAvbim;
 		$avs[] = $valorAvbim;
 		$avs[] = $bimAv;
+		$avs[] = $idAvbim;
 		$this->render('update',array(
 			'model'=>$model,'aulas'=>$aulas,'avs'=>$avs
 		));
@@ -393,7 +438,7 @@ class PAPlanoEtapaController extends Controller
 
 	function carregaAvaliacoes($id,$bim){
 
-		// Aulas
+		// Avaliações
 		$criteria = new CDbCriteria();
 		$criteria->compare('id_plano',$id);
 		$criteria->compare('bimestre',$bim);
@@ -408,6 +453,46 @@ class PAPlanoEtapaController extends Controller
 		$modelA = PAAvaliacao::model()->findAll($criteria);
 
 		return $modelA;
+
+	}
+
+	function carregaAvaliacoesMarcadas($id){
+
+		// Avaliações marcadas
+		$criteria = new CDbCriteria();
+		$criteria->compare('id_plano',$id);
+		$modelPA = PAPlanoAvaliacao::model()->findAll($criteria);
+		$idsAv = array();
+		foreach($modelPA as $p){
+			$idsAv[] = $p->id_avaliacao;
+		}
+
+		$criteria = new CDbCriteria();
+		$criteria->addInCondition('id_avaliacao',$idsAv);
+		$modelA = PAMarcacaoProva::model()->findAll($criteria);
+
+		$marcadas = array();
+		$x = 0;
+		foreach($modelA as $a){
+			$marcadas[$x][] = $a->CDTipoTurma;
+			$marcadas[$x][] = $a->data;
+			$marcadas[$x][] = $a->inicio;
+			$marcadas[$x][] = $a->fim;
+			$marcadas[$x][] = $a->DataProvaMarcada;
+			$marcadas[$x][] = $a->id_avaliacao;
+			$marcadas[$x][] = $a->conteudo;
+			$marcadas[$x][] = $a->CDTurma;
+			$marcadas[$x][] = $a->CDDisciplina;
+			$marcadas[$x][] = 0;
+			$x++;
+		}
+		//if(isset(Yii::app()->session['marcadas']))
+		//	unset(Yii::app()->session['marcadas']);
+		//Yii::app()->session['marcadas'] = $marcadas;
+		// if($x == 0)
+		// 	return false;
+		// return true;
+		return $marcadas;
 
 	}
 
@@ -438,12 +523,14 @@ class PAPlanoEtapaController extends Controller
 		$num = PAPlanoAvaliacao::model()->deleteAll($criteria);
 
 		$criteria = new CDbCriteria();
+		$criteria->addInCondition('id_avaliacao',$idsAv);
+		$num = PAMarcacaoProva::model()->deleteAll($criteria);
+
+		$criteria = new CDbCriteria();
 		$criteria->addInCondition('id',$idsAv);
 		$num = PAAvaliacao::model()->deleteAll($criteria);
 
-		$criteria = new CDbCriteria();
-		$criteria->addInCondition('id_avaliacao',$idsAv);
-		$num = PA_MarcacaoProva::model()->deleteAll($criteria);
+
 
 	}
 
