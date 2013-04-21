@@ -88,7 +88,7 @@ class ModalidadeController extends Controller
 				        exit;
 				 }
 				else
-					$this->redirect(array('view','id'=>$model->CDModalidade));
+					$this->redirect('admin');
 			}
 				
 		}

@@ -1,17 +1,12 @@
 <?php
 
-class DepartamentoController extends Controller
+class ProfessorDisciplinaController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column1';
-
-	/**
-	 * @var CActiveRecord the currently loaded data model instance.
-	 */
-	private $_model;
 
 	/**
 	 * @return array action filters
@@ -51,11 +46,12 @@ class DepartamentoController extends Controller
 
 	/**
 	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
 	 */
-	public function actionView()
+	public function actionView($id)
 	{
 		$this->render('view',array(
-			'model'=>$this->loadModel(),
+			'model'=>$this->loadModel($id),
 		));
 	}
 
@@ -65,16 +61,16 @@ class DepartamentoController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Departamento;
+		$model=new ProfessorDisciplina;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Departamento']))
+		if(isset($_POST['ProfessorDisciplina']))
 		{
-			$model->attributes=$_POST['Departamento'];
+			$model->attributes=$_POST['ProfessorDisciplina'];
 			if($model->save())
-				$this->redirect('admin');
+				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('create',array(
@@ -85,19 +81,20 @@ class DepartamentoController extends Controller
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate()
+	public function actionUpdate($id)
 	{
-		$model=$this->loadModel();
+		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Departamento']))
+		if(isset($_POST['ProfessorDisciplina']))
 		{
-			$model->attributes=$_POST['Departamento'];
+			$model->attributes=$_POST['ProfessorDisciplina'];
 			if($model->save())
-				$this->redirect(array('admin'));
+				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('update',array(
@@ -107,18 +104,19 @@ class DepartamentoController extends Controller
 
 	/**
 	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete()
+	public function actionDelete($id)
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
 			// we only allow deletion via POST request
-			$this->loadModel()->delete();
+			$this->loadModel($id)->delete();
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
-				$this->redirect(array('index'));
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
@@ -129,7 +127,7 @@ class DepartamentoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Departamento');
+		$dataProvider=new CActiveDataProvider('ProfessorDisciplina');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -140,10 +138,10 @@ class DepartamentoController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Departamento('search');
+		$model=new ProfessorDisciplina('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Departamento']))
-			$model->attributes=$_GET['Departamento'];
+		if(isset($_GET['ProfessorDisciplina']))
+			$model->attributes=$_GET['ProfessorDisciplina'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -153,17 +151,14 @@ class DepartamentoController extends Controller
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
+	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel()
+	public function loadModel($id)
 	{
-		if($this->_model===null)
-		{
-			if(isset($_GET['id']))
-				$this->_model=Departamento::model()->findbyPk($_GET['id']);
-			if($this->_model===null)
-				throw new CHttpException(404,'The requested page does not exist.');
-		}
-		return $this->_model;
+		$model=ProfessorDisciplina::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
 	}
 
 	/**
@@ -172,7 +167,7 @@ class DepartamentoController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='departamento-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='professor-disciplina-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

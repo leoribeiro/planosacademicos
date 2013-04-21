@@ -222,7 +222,7 @@ class TurmaController extends Controller
 				        exit;
 				 }
 				else
-					    $this->redirect(array('view','id'=>$model->CDTurma));
+					    $this->redirect('admin');
 			}
 				
 		}

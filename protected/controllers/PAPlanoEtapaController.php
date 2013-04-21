@@ -31,7 +31,7 @@ class PAPlanoEtapaController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','aula'),
+				'actions'=>array('create','update','aula','listaPlanos','getPlano'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -598,6 +598,87 @@ class PAPlanoEtapaController extends Controller
 		$this->render('planos',array(
 			'model'=>$model,
 		));
+	}
+
+	public function actionListaPlanos()
+	{
+		$criteria = new CDbCriteria;
+		$criteria->with = array('relDisciplina','relTurma');
+		$criteria->together = true;
+		if(!Yii::app()->user->name == "admin"){
+			$criteriaS = new CDbCriteria();
+			$criteriaS->compare('Servidor_CDServidor',Yii::app()->user->CDServidor);
+			$modelAux = Professor::model()->with('relServidor')->find($criteriaS);
+			$criteria->compare('professor',$modelAux->CDProfessor);
+		}
+
+		$model = PAPlanoEtapa::model()->findAll($criteria);
+		$x = 0;
+		foreach ($model as $m) {
+        	$rows[$x] = $m->attributes;
+        	$rows[$x]['disc'] = $m->relDisciplina->NMDisciplina;
+        	$rows[$x]['turma'] = $m->relTurma->NMTurma;
+        	$x++;
+    	}
+
+		echo CJSON::encode($rows);
+	}
+
+	public function actionGetPlano()
+	{
+		$id = null;
+		if(isset($_GET['id'])){
+			$id = $_GET['id'];
+		}
+		$criteria = new CDbCriteria;
+		$criteria->compare('id_plano',$id);
+		$model = PAPlanoAula::model()->findAll($criteria);
+		$idsAula = array();
+		$bimAula = array();
+		foreach ($model as $m) {
+        	$idsAula[] = $m->id_aula;
+        	$bimAula[] = $m->bimestre;
+    	}
+
+    	$criteria = new CDbCriteria;
+		$criteria->compare('id_plano',$id);
+    	$model = PAPlanoAvaliacao::model()->findAll($criteria);
+		$idsAv = array();
+		$bimAv = array();
+		foreach ($model as $m) {
+        	$idsAv[] = $m->id_avaliacao;
+        	$bimAv[] = $m->bimestre;
+    	}
+
+    	$criteria = new CDbCriteria;
+		$criteria->addInCondition('id',$idsAula);
+    	$modelsAula = PAAula::model()->findAll($criteria);
+
+    	$aulas = array();
+		$x = 0;
+		foreach ($modelsAula as $m) {
+        	$aulas[$x] = $m->attributes;
+        	$aulas[$x]["bim"] = $bimAula[$x];
+        	$x++;
+    	}
+
+    	$criteria = new CDbCriteria;
+		$criteria->addInCondition('id',$idsAv);
+    	$modelsAv = PAAvaliacao::model()->findAll($criteria);
+
+    	$avs = array();
+    	$x = 0;
+		foreach ($modelsAv as $m) {
+        	$avs[$x] = $m->attributes;
+        	$avs[$x]["bim"] = $bimAv[$x];
+        	$x++;
+    	}
+
+    	$dados = array();
+    	$dados[] = $aulas;
+    	$dados[] = $avs;
+
+		echo CJSON::encode($dados);
 	}
 
 	public function actionAula()

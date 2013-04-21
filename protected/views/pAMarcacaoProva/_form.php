@@ -83,7 +83,7 @@
 		<?php $this->widget('bootstrap.widgets.TbButton', array(
 			'buttonType'=>'submit',
 			'type'=>'primary',
-			'label'=>$model->isNewRecord ? 'Marcar avaliação' : 'Salvar plano',
+			'label'=>$model->isNewRecord ? 'Marcar avaliação' : 'Marcar avaliação',
 		)); ?>
 
 		</div>

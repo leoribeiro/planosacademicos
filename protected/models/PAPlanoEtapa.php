@@ -122,4 +122,17 @@ class PAPlanoEtapa extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+	//
+	// Once EJsonBehavior is placed in the folder
+	// We need to configure the behavior() function
+	// in your model
+
+	public function behaviors() {
+	   return array(
+	     'EJsonBehavior'=>array(
+	    'class'=>'application.behaviors.EJsonBehavior'
+	      ),
+	    );
+	}
 }

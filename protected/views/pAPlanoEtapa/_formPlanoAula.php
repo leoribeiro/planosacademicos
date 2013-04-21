@@ -96,10 +96,40 @@ array('id'=>'modalAv')); ?>
  
 <?php $this->endWidget(); ?>
 
+<?php $this->beginWidget('bootstrap.widgets.TbModal', 
+array('id'=>'modalImporta')); ?>
+ 
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>Importar - Selecione o plano desejado</h4>
+</div>
+ 
+<div class="modal-body" id="planosImporta">
+
+</div>
+ 
+<div class="modal-footer">
+    <?php $this->widget('bootstrap.widgets.TbButton', array(
+    	'id'=>'clickAv',
+        'type'=>'primary',
+        'label'=>'Importar',
+        //'url'=>'#',
+        'htmlOptions'=>array(
+        	'onClick'=>'importarPlano();',
+        	//'data-dismiss'=>'modal'
+        ),
+    )); ?>
+</div>
+ 
+<?php $this->endWidget(); ?>
+
 
 <fieldset>
  
     <legend>Planejamento de Etapa</legend>
+    <a onClick="CarregaPlanos();" data-toggle="modal" data-target="#modalImporta" class="btn">Importar dados</a>
+    <br />
+    <br />
 	<?php 
 
 
@@ -182,6 +212,71 @@ array('id'=>'modalAv')); ?>
 		?>
 		idAvMarcada = 0;
     });
+
+	function importarPlano(){
+		valor = $('input[name=planoimporta]:checked').val();
+		if(!(valor===undefined)){
+			$.ajax({
+		        type: 'GET',
+		        url: '<?php echo $this->createUrl("//PAPlanoEtapa/getPlano/");?>',
+		        dataType: "json",
+		        data: 'id='+valor,
+		        success: function(response, status) {
+		                preenchePlano(response);
+		        },
+			});
+		}
+	}
+
+	function preenchePlano(plano){
+		for(x=0;x<plano[0].length;x++){
+			$("#aula_data").val(plano[0][x]["aulas"]);
+			$("#aula_conteudo").val(plano[0][x]["conteudo"]);
+			$("#aula_material").val(plano[0][x]["material"]);
+			bimestreAtual = plano[0][x]["bim"];
+			addAula();
+		}
+		for(x=0;x<plano[1].length;x++){
+			$("#av_nombre").val(plano[1][x]["descricao"]);
+			$("#av_valor").val(plano[1][x]["valor"]);
+			bimestreAtual = plano[1][x]["bim"];
+			addAv();
+		}
+		$('#modalImporta').modal('hide');
+	}
+
+	function CarregaPlanos(){
+		$.ajax({
+        type: 'POST',
+        url: '<?php echo $this->createUrl("//PAPlanoEtapa/listaPlanos/");?>',
+        dataType: "json",
+        success: function(response, status) {
+                //obj = jQuery.parseJSON(response);
+                montaTabelaPlanos(response);
+        },
+		});
+	}
+
+	function montaTabelaPlanos(planos){
+		content = "<table class=\"table table-bordered\">";
+		content += "<tr>";
+		content += "<td></td>";
+		content += "<td>Disciplina</td>";
+		content += "<td>Turma</td>";
+		content += "<td>Ano</td>";
+		content += "</tr>";
+		for(x=0;x<planos.length;x++){
+			content += "<tr>";
+			content += "<td><input type=\"radio\" name=\"planoimporta\" id=\"planoimporta"+planos[x]["id"]+"\" value=\""+planos[x]["id"]+"\"></td>";
+			content += "<td>"+planos[x]["disc"]+"</td>";
+			content += "<td>"+planos[x]["turma"]+"</td>";
+			content += "<td>"+planos[x]["ano"]+"</td>";
+			content += "</tr>";
+		}
+		content += "</table>";
+		$("#planosImporta").html(content);
+	}
+
 
     function botoes(bimestre){
     	var htmlContent = "<a onClick=\"setaBimestre("+bimestre+")\" data-toggle=\"modal\" data-target=\"#myModal\" class=\"btn \">Adicionar Aula</a>&nbsp;&nbsp;";

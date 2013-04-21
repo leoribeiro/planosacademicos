@@ -86,7 +86,7 @@ class TurnoController extends Controller
 				        exit;
 				 }
 				else
-					    $this->redirect(array('view','id'=>$model->CDTurno));
+					    $this->redirect('admin');
 			}
 		}
 

@@ -18,7 +18,7 @@ $('.search-form form').submit(function(){
 		Disciplinas
 </div>
 <?php $this->widget('bootstrap.widgets.TbButton', array(
-    'label'=>'Novo Departamento',
+    'label'=>'Nova disciplina',
     'type'=>'primary',
     'size'=>'',
     'url'=>$this->createUrl('Disciplina/create')

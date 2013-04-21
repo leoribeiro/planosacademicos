@@ -1,5 +1,5 @@
 <div id="titlePages">
-		Novo departamento
+		Relacionar professor a disciplinas
 </div>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

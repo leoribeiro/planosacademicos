@@ -74,7 +74,7 @@ class HorarioController extends Controller
 		{
 			$model->attributes=$_POST['Horario'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->CDHorario));
+				$this->redirect('admin');
 		}
 
 		$this->render('create',array(

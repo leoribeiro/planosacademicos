@@ -86,7 +86,7 @@ class DisciplinaController extends Controller
 				        exit;
 				 }
 				else
-					    $this->redirect(array('view','id'=>$model->CDDisciplina));
+					    $this->redirect('admin');
 			}	
 		}
 		
