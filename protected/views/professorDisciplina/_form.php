@@ -69,7 +69,7 @@ array('id'=>'modalAddDisc')); ?>
 		}
 	?>
 	<?php if(!isset($viewT)){
-		echo '<br /><br /><a data-toggle="modal" data-target="#modalAddDisc" class="btn">Adicionar disciplina</a>';
+		echo '<br /><br /><a data-toggle="modal" data-target="#modalAddDisc" onClick="resetaSelects()" class="btn">Adicionar disciplina</a>';
 	}
 	?>
 	<div id="divDisc">
@@ -234,4 +234,11 @@ array('id'=>'modalAddDisc')); ?>
 		updateTabla();
 
 	}
+
+	function resetaSelects(){
+		$("#turma").val("");
+		$("#disc").val("");
+	}
+
+
 </script>
