@@ -149,6 +149,12 @@ class PAPlanoEtapaController extends Controller
 			//exit();
 			$model->attributes=$_POST['PAPlanoEtapa'];
 
+			if(!isset($_POST['PAPlanoEtapa']['turma'])){
+				$dataProf = explode("-",$model->disciplina);
+				$model->disciplina = $dataProf[0];
+				$model->turma = $dataProf[1];
+			}
+
 			for($x=1;$x<5;$x++){
 				if(isset($_POST['dataAula'.$x.'bim'])){
 					$dataAulabim[] = $_POST['dataAula'.$x.'bim'];
@@ -296,6 +302,12 @@ class PAPlanoEtapaController extends Controller
 			$bimAv = array();
 
 			$model->attributes=$_POST['PAPlanoEtapa'];
+
+			if(!isset($_POST['PAPlanoEtapa']['turma'])){
+				$dataProf = explode("-",$model->disciplina);
+				$model->disciplina = $dataProf[0];
+				$model->turma = $dataProf[1];
+			}
 
 			for($x=1;$x<5;$x++){
 				if(isset($_POST['dataAula'.$x.'bim'])){

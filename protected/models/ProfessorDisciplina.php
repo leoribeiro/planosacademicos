@@ -42,8 +42,8 @@ class ProfessorDisciplina extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id_professor, id_disciplina', 'required'),
-			array('id_professor, id_disciplina', 'numerical', 'integerOnly'=>true),
+			array('id_professor', 'required'),
+			array('id_professor, id_disciplina,id_turma', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, id_professor, id_disciplina', 'safe', 'on'=>'search'),
@@ -60,6 +60,7 @@ class ProfessorDisciplina extends CActiveRecord
 		return array(
 			'relDisciplina' => array(self::BELONGS_TO, 'Disciplina', 'id_disciplina'),
 			'relProfessor' => array(self::BELONGS_TO, 'Professor', 'id_professor'),
+			'relTurma' => array(self::BELONGS_TO, 'Turma', 'id_turma'),
 		);
 	}
 
@@ -70,7 +71,7 @@ class ProfessorDisciplina extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'id_professor' => 'Id Professor',
+			'id_professor' => 'Professor',
 			'id_disciplina' => 'Id Disciplina',
 		);
 	}
@@ -79,7 +80,7 @@ class ProfessorDisciplina extends CActiveRecord
 		 $criteria = new CDbCriteria();
 		 $criteria->compare('id_professor',$this->id_professor);
 		 $modelP = ProfessorDisciplina::model()->findAll($criteria);
-		 
+
 		 if(empty($modelP)){
 		 	$this->disciplinas = "Sem Disciplinas";
 		 }
@@ -89,13 +90,13 @@ class ProfessorDisciplina extends CActiveRecord
 		 		$idsDisc[] = $m->id_disciplina;
 		 	}
 		 	$criteria = new CDbCriteria();
-		 	$criteria->addInCondition('id',$idsDisc);
+		 	$criteria->addInCondition('CDDisciplina',$idsDisc);
 		 	$modelD = Disciplina::model()->findAll($criteria);
 		 	$disc = "";
 		 	foreach($modelD as $m){
-		 		$disc .= $m->NMDisciplina . ",";
+		 		$disc .= $m->NMDisciplina . ", ";
 		 	}
-		 	rtrim($disc, ",");
+		 	$disc = rtrim($disc,", ");
 		 	$this->disciplinas = $disc;
 		 }
          return $this->disciplinas;
@@ -118,6 +119,7 @@ class ProfessorDisciplina extends CActiveRecord
 
 		$criteria->distinct = true;
         $criteria->select = 'id_professor';
+        $criteria->group = 'id_professor';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

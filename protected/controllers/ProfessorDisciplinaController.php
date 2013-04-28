@@ -50,8 +50,16 @@ class ProfessorDisciplinaController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$model=new ProfessorDisciplina;
+		$model->id_professor = $id;
+		$dados = $this->carregaDisciplinas($id);
+		$discs = $dados[0];
+		$turmas = $dados[1];
+
+		$dados = array($discs,$turmas);
+
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$model,'dados'=>$dados
 		));
 	}
 
@@ -62,20 +70,78 @@ class ProfessorDisciplinaController extends Controller
 	public function actionCreate()
 	{
 		$model=new ProfessorDisciplina;
+		$discs = array();
+		$turmas = array();
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		if(isset($_GET['id'])){
+			$id = $_GET['id'];
+			$model->id_professor = $id;
+			$dados = $this->carregaDisciplinas($id);
+			$discs = $dados[0];
+			$turmas = $dados[1];
+		}
+
+
 
 		if(isset($_POST['ProfessorDisciplina']))
 		{
+
 			$model->attributes=$_POST['ProfessorDisciplina'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+
+			if(isset($_POST['discS']) && isset($_POST['turmaS'])){
+				$discs = $_POST['discS'];
+				$turmas = $_POST['turmaS'];
+			}
+			if($model->validate()){
+				if(empty($discs) && empty($turmas)){
+					$model->addError('id_disciplina','Deve-se selecionar pelo menos uma disciplina.');
+				}
+				else{
+					$this->deletarDependecias($model->id_professor);
+					for($x=0;$x<count($discs);$x++){
+						$m = new ProfessorDisciplina;
+						$m->id_professor = $model->id_professor;
+						$m->id_disciplina = $discs[$x];
+						$m->id_turma = $turmas[$x];
+						$m->save();
+					}
+					$this->redirect(array('admin','success'=>true));
+				}
+			}
 		}
 
+		$dados = array($discs,$turmas);
+
 		$this->render('create',array(
-			'model'=>$model,
+			'model'=>$model,'dados'=>$dados
 		));
+	}
+
+	function deletarDependecias($id){
+
+		$criteria = new CDbCriteria();
+		$criteria->compare('id_professor',$id);
+		ProfessorDisciplina::model()->deleteAll($criteria);
+
+	}
+
+	function carregaDisciplinas($id){
+
+		// Avaliações
+		$criteria = new CDbCriteria();
+		$criteria->compare('id_professor',$id);
+		$modelP = ProfessorDisciplina::model()->findAll($criteria);
+		$idsT = array();
+		$idsD = array();
+		foreach($modelP as $p){
+			$idsD[] = $p->id_disciplina;
+			$idsT[] = $p->id_turma;
+		}
+
+		$dados = array($idsD,$idsT);
+
+		return $dados;
+
 	}
 
 	/**
@@ -112,7 +178,9 @@ class ProfessorDisciplinaController extends Controller
 		if(Yii::app()->request->isPostRequest)
 		{
 			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
+			$criteria = new CDbCriteria;
+			$criteria->compare('id_professor',$id);
+			ProfessorDisciplina::model()->deleteAll($criteria);
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
@@ -138,6 +206,11 @@ class ProfessorDisciplinaController extends Controller
 	 */
 	public function actionAdmin()
 	{
+		if(isset($_GET['success'])) {
+
+			Yii::app()->user->setFlash('success', 'Disciplinas do professor salvas com sucesso!');
+
+		}
 		$model=new ProfessorDisciplina('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['ProfessorDisciplina']))

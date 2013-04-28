@@ -24,18 +24,31 @@
 
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
 	'id'=>'professor-disciplina-grid',
+	'type'=>'striped bordered',
 	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+	//'filter'=>$model,
 	'columns'=>array(
-		'professor',
+		'relProfessor.relServidor.NMServidor',
 		array(
 			'name'=>'disciplinas',
 			'value'=>'$data->getDisciplinas()',
 			'type'=>'text',
-			'header'=>'Turma',
+			'header'=>'Disciplinas',
 		),
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
+			'buttons'=>array
+    		(
+				'update' =>array(
+				    'url'=>'Yii::app()->createUrl("ProfessorDisciplina/create", array("id"=>$data->id_professor))',
+				),
+				'delete' =>array(
+				    'url'=>'Yii::app()->createUrl("ProfessorDisciplina/delete", array("id"=>$data->id_professor))',
+				),
+				'view' =>array(
+				    'url'=>'Yii::app()->createUrl("ProfessorDisciplina/view", array("id"=>$data->id_professor))',
+				)
+			)
 		),
 	),
 )); ?>
