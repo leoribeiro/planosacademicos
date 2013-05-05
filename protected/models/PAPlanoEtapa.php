@@ -75,7 +75,7 @@ class PAPlanoEtapa extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'ano' => 'Ano',
+			'ano' => 'Ano letivo',
 			'professor' => 'Professor',
 			'turma' => 'Turma',
 			'disciplina' => 'Disciplina',
