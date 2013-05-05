@@ -149,7 +149,7 @@ class PAPlanoEtapaController extends Controller
 			//exit();
 			$model->attributes=$_POST['PAPlanoEtapa'];
 
-			if(!isset($_POST['PAPlanoEtapa']['turma'])){
+			if(!empty($model->disciplina) && !isset($_POST['PAPlanoEtapa']['turma'])){
 				$dataProf = explode("-",$model->disciplina);
 				$model->disciplina = $dataProf[0];
 				$model->turma = $dataProf[1];
