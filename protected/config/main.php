@@ -7,13 +7,6 @@ $host = $configPam->host;
 $usuario = $configPam->usuario;
 $password = $configPam->password;
 $basedados = $configPam->basedados;
-echo $host;
-echo $usuario;
-echo $password;
-echo $basedados;
-exit();
-
-
 
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
