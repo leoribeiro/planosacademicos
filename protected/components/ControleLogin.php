@@ -9,6 +9,7 @@ class ControleLogin {
 		$this->ipServer = gethostbyname($_SERVER['SERVER_NAME']);
 		$configPam = new ConfigApp();
 		$this->ipServerNTI = $configPam->ipServer;
+		//echo $configPam->ipServer;exit();
 	}
 
 	public function conectaLDAP(){

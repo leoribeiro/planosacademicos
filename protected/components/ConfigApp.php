@@ -2,14 +2,14 @@
 
 class ConfigApp {
 
-	$host = "";
-	$usuario = "";
-	$password = "";
-	$basedados = "";
-	$passAdmin = "";
-	$ipServer = "";
+	public $host = "";
+	public $usuario = "";
+	public $password = "";
+	public $basedados = "";
+	public $passAdmin = "admin";
+	public $ipServer = "";
 
-	function ConfigApp(){
+	public function ConfigApp(){
 		$dados = array();
 		// primeira linha: host
 		// segunda linha: usuario
@@ -35,3 +35,5 @@ class ConfigApp {
 		}
 	}
 }
+
+?>

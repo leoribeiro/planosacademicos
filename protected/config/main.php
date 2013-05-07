@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(dirname(__FILE__)).'/components/ConfigApp.php');
+
 $configPam = new ConfigApp();
 $host = $configPam->host;
 $usuario = $configPam->usuario;

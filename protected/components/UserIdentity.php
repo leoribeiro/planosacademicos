@@ -7,13 +7,14 @@
  */
 class UserIdentity extends CUserIdentity
 {
-	$configPam = new ConfigApp();
-	private $users=array(
-			// username => password
-			'admin'=>$configPam->passAdmin,
-	);
+	private $configPam;
+	private $users;
 
 	public function validaAdmin(){
+		$this->configPam = new ConfigApp();
+		$this->users=array(
+			'admin'=>$this->configPam->passAdmin,
+		);
 		if(isset($this->users[$this->username])){
 			if($this->users[$this->username]==$this->password){
 				$this->errorCode=self::ERROR_NONE;
