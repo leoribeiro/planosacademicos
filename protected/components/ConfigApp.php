@@ -18,7 +18,7 @@ class ConfigApp {
 		$handle = @fopen("/var/passdb.conf", "r");
 		if ($handle) {
 		    while (($buffer = fgets($handle, 4096)) !== false) {
-		        $dados[] = $buffer;
+		        $dados[] = chop($buffer);
 		    }
 		    if (!feof($handle)) {
 		        echo "Error: unexpected fgets() fail\n";
