@@ -1,30 +1,11 @@
 <?php
 
-$dados = array();
-// primeira linha: host
-// segunda linha: usuario
-// terceira linha: senha
-// quarta linha: base de dados
-$handle = @fopen("/var/passdb.conf", "r");
-if ($handle) {
-    while (($buffer = fgets($handle, 4096)) !== false) {
-        $dados[] = $buffer;
-    }
-    if (!feof($handle)) {
-        echo "Error: unexpected fgets() fail\n";
-    }
-    fclose($handle);
-}
-$host = "";
-$usuario = "";
-$password = "";
-$basedados = "";
-if(!empty($dados)){
-	$host = $dados[0];
-	$usuario = $dados[1];
-	$password = $dados[2];
-	$basedados = $dados[3];
-}
+$configPam = new ConfigApp();
+$host = $configPam->host;
+$usuario = $configPam->usuario;
+$password = $configPam->password;
+$basedados = $configPam->basedados;
+
 
 
 // uncomment the following to define a path alias

@@ -1,0 +1,37 @@
+<?php
+
+class ConfigApp {
+
+	$host = "";
+	$usuario = "";
+	$password = "";
+	$basedados = "";
+	$passAdmin = "";
+	$ipServer = "";
+
+	function ConfigApp(){
+		$dados = array();
+		// primeira linha: host
+		// segunda linha: usuario
+		// terceira linha: senha
+		// quarta linha: base de dados
+		$handle = @fopen("/var/passdb.conf", "r");
+		if ($handle) {
+		    while (($buffer = fgets($handle, 4096)) !== false) {
+		        $dados[] = $buffer;
+		    }
+		    if (!feof($handle)) {
+		        echo "Error: unexpected fgets() fail\n";
+		    }
+		    fclose($handle);
+		}
+		if(!empty($dados)){
+			$this->host = $dados[0];
+			$this->usuario = $dados[1];
+			$this->password = $dados[2];
+			$this->basedados = $dados[3];
+			$this->passAdmin = $dados[4];
+			$this->ipServer = $dados[5];
+		}
+	}
+}

@@ -2,13 +2,14 @@
 
 class ControleLogin {
 
-	private $ipServerNTI = "200.131.39.111";
+	private $ipServerNTI;
 	private $ipServer;
 
 	function ControleLogin(){
 		$this->ipServer = gethostbyname($_SERVER['SERVER_NAME']);
+		$configPam = new ConfigApp();
+		$this->ipServerNTI = $configPam->ipServer;
 	}
-
 
 	public function conectaLDAP(){
 
@@ -57,14 +58,13 @@ class ControleLogin {
 		  $dn = "uid=".$username.",ou=people,ou=".$tipoAluno.",
 		  ou=".$ou.",dc=cefetmg,dc=br";
 		  $filter="(objectclass=*)";
-		  $justthese = array("ou", "sn", "givenname", "mail"); 
+		  $justthese = array("ou", "sn", "givenname", "mail");
 		  $sr=@ldap_read($ds, $dn, $filter);
 		  if(!$sr){
 			return false;
 	      }
-	
+
 		  $entry = @ldap_get_entries($ds, $sr);
-		   
 		  $nomecompleto = $entry[0]["cn"][0];
 		  $email = $entry[0]["gosamailforwardingaddress"][0];
 		  $this->modelAluno = array();
@@ -78,26 +78,20 @@ class ControleLogin {
 		  else if($tipoAluno == "mediotecnico"){
 			$this->modelAluno[] = "alunoTecnico";
 		  }
-		 
 		  return true;
-	
 	}
-	
 	public function VerificaServidorBD($username){
-		
 	  	  $criteria = new CDbCriteria;
 		  $criteria->compare('LoginServidor',$username);
 		  $dadosServidor = Servidor::model()->find($criteria);
 		  return $dadosServidor;
-		
 	}
-	
+
 	public function VerificaServidorReq($username){
-		
 	  	  $criteria = new CDbCriteria;
 		  $criteria->compare('LoginServidor',$username);
 		  $dadosServidor = Servidor::model()->find($criteria);
-		
+
 		  if(!is_null($dadosServidor)){
 			  $criteria = new CDbCriteria;
 			  $criteria->compare('Servidor_CDServidor',$dadosServidor->CDServidor);

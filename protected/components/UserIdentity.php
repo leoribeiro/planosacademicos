@@ -7,9 +7,10 @@
  */
 class UserIdentity extends CUserIdentity
 {
+	$configPam = new ConfigApp();
 	private $users=array(
 			// username => password
-			'admin'=>'amanha eh um bel0 dia',
+			'admin'=>$configPam->passAdmin,
 	);
 
 	public function validaAdmin(){
