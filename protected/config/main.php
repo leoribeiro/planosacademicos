@@ -7,6 +7,11 @@ $host = $configPam->host;
 $usuario = $configPam->usuario;
 $password = $configPam->password;
 $basedados = $configPam->basedados;
+echo $host;
+echo $usuario;
+echo $password;
+echo $basedados;
+exit();
 
 
 
