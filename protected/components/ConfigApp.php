@@ -19,11 +19,13 @@ class ConfigApp {
 		if ($handle) {
 		    while (($buffer = fgets($handle, 4096)) !== false) {
 		        $dados[] = $buffer;
+		        echo $buffer."<br />";
 		    }
 		    if (!feof($handle)) {
 		        echo "Error: unexpected fgets() fail\n";
 		    }
 		    fclose($handle);
+		    exit();
 		}
 		if(!empty($dados)){
 			$this->host = $dados[0];
