@@ -212,8 +212,8 @@ class PAMarcacaoProvaController extends Controller
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['MarcacaoProva']))
 			$model->attributes=$_GET['MarcacaoProva'];
-			
-		// para tamanho da página selecionada no gridview	
+
+		// para tamanho da página selecionada no gridview
 		if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize',(int)$_GET['pageSize']);
             unset($_GET['pageSize']);
@@ -225,8 +225,7 @@ class PAMarcacaoProvaController extends Controller
 			'model'=>$model,
 		));
 	}
-	
-	
+
 	public function actionAdminHistorico()
 	{
 		$this->layout='//layouts/column1';
@@ -234,8 +233,7 @@ class PAMarcacaoProvaController extends Controller
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['MarcacaoProva']))
 			$model->attributes=$_GET['MarcacaoProva'];
-			
-		// para tamanho da página selecionada no gridview	
+		// para tamanho da página selecionada no gridview
 		if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize',(int)$_GET['pageSize']);
             unset($_GET['pageSize']);
@@ -304,6 +302,5 @@ class PAMarcacaoProvaController extends Controller
 		else
 			$valor = 1;
 			echo $valor;
-		
 	}
 }

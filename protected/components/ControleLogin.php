@@ -11,9 +11,6 @@ class ControleLogin {
 
 
 	public function conectaLDAP(){
-		
-
-		// ssh -L 1389:200.131.39.111:389 nti@200.131.39.111
 
 		// LDAP configurações
 		if($this->ipServer == $this->ipServerNTI){
@@ -22,16 +19,14 @@ class ControleLogin {
 		}
 		else{
 			$serverURL = "localhost";
-			$ds=ldap_connect($serverURL,1389);	
+			$ds=ldap_connect($serverURL,1389);
 		}
-		
+
 		$ds=ldap_connect($serverURL);
 		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 		ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
-		
 		return $ds;
 	}
-	
 	// retorna true se autenticar
 	// retorna false se não autenticar
 	public function autenticaLDAP($ds,$ou,$username,$password){
@@ -47,18 +42,16 @@ class ControleLogin {
 		   $dnAlunoT = "uid=".$username.",ou=people,ou=mediotecnico,
 		   ou=".$ou.",dc=cefetmg,dc=br";
 			if (!($r = @ldap_bind($ds,$dn,$password)) and
-			!($r = @ldap_bind($ds,$dnAlunoG,$password)) 
+			!($r = @ldap_bind($ds,$dnAlunoG,$password))
 			and !($r = @ldap_bind($ds,$dnAlunoT,$password))) {
 		      return false;
 		   }
 			return true;
 		}
 		return false;
-		   			  
 	}
-	
+
 	public function VerificaDadosLDAPAluno($username,$tipoAluno){
-		
 		  $ds = $this->conectaLDAP();
 		  $ou = "aluno";
 		  $dn = "uid=".$username.",ou=people,ou=".$tipoAluno.",

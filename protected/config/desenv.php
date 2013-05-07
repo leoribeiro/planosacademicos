@@ -8,7 +8,7 @@ return CMap::mergeArray(
 				'class'=>'system.test.CDbFixtureManager',
 			),
 			'db'=>array(
-				'connectionString' => 'mysql:host=127.0.0.1;dbname=ntiaplicacoes',
+				'connectionString' => 'mysql:host=127.0.0.1;dbname=apps1',
 				'emulatePrepare' => true,
 				'enableProfiling'=>true,
 				'enableParamLogging'=>true,
@@ -26,6 +26,15 @@ return CMap::mergeArray(
 			            ),
 			      ),
 			),
+		),
+		'modules'=>array(
+			'gii'=>array(
+					'class'=>'system.gii.GiiModule',
+					'password'=>'123',
+		            'generatorPaths'=>array(
+		                'bootstrap.gii',
+		            ),
+		        ),
 		),
 	)
 );

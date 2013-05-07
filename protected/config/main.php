@@ -1,5 +1,32 @@
 <?php
 
+$dados = array();
+// primeira linha: host
+// segunda linha: usuario
+// terceira linha: senha
+// quarta linha: base de dados
+$handle = @fopen("/var/passdb.conf", "r");
+if ($handle) {
+    while (($buffer = fgets($handle, 4096)) !== false) {
+        $dados[] = $buffer;
+    }
+    if (!feof($handle)) {
+        echo "Error: unexpected fgets() fail\n";
+    }
+    fclose($handle);
+}
+$host = "";
+$usuario = "";
+$password = "";
+$basedados = "";
+if(!empty($dados)){
+	$host = $dados[0];
+	$usuario = $dados[1];
+	$password = $dados[2];
+	$basedados = $dados[3];
+}
+
+
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
@@ -33,17 +60,6 @@ return array(
 
 	'theme'=>'bootstrap',
 
-	'modules'=>array(
-
-	'gii'=>array(
-			'class'=>'system.gii.GiiModule',
-			'password'=>'123',
-            'generatorPaths'=>array(
-                'bootstrap.gii',
-            ),
-        ),
-	),
-
 	// application components
 	'components'=>array(
 		'user'=>array(
@@ -68,10 +84,10 @@ return array(
 		),
 		// uncomment the following to use a MySQL database
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=ntiaplicacoes',
+			'connectionString' => 'mysql:host='.$host.';dbname='.$basedados,
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'n2t0i11',
+			'username' => $usuario,
+			'password' => $password,
 			'charset' => 'utf8',
 		),
 
