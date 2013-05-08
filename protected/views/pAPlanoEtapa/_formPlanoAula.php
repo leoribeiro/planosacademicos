@@ -284,7 +284,7 @@ array('id'=>'modalImporta')); ?>
     	var divs = "<div id=\"div_aulas"+bimestre+"\"></div><div id=\"div_av"+bimestre+"\"></div>";
     	if(!viewT){
     		$("#tab"+bimestre).append(htmlContent);
-    		$("#tab"+bimestre).append(htmlContent2);
+    		//$("#tab"+bimestre).append(htmlContent2);
     	}
     	$("#tab"+bimestre).append(divs);
 
