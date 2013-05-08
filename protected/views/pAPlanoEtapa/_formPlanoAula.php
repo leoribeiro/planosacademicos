@@ -280,7 +280,7 @@ array('id'=>'modalImporta')); ?>
 
     function botoes(bimestre){
     	var htmlContent = "<a onClick=\"setaBimestre("+bimestre+")\" data-toggle=\"modal\" data-target=\"#myModal\" class=\"btn \">Adicionar Aula</a>&nbsp;&nbsp;";
-    	var htmlContent2 = "<a onClick=\"setaBimestre("+bimestre+")\" data-toggle=\"modal\" data-target=\"#modalAv\" class=\"btn \">Adicionar Avaliação</a>";
+    	//var htmlContent2 = "<a onClick=\"setaBimestre("+bimestre+")\" data-toggle=\"modal\" data-target=\"#modalAv\" class=\"btn \">Adicionar Avaliação</a>";
     	var divs = "<div id=\"div_aulas"+bimestre+"\"></div><div id=\"div_av"+bimestre+"\"></div>";
     	if(!viewT){
     		$("#tab"+bimestre).append(htmlContent);

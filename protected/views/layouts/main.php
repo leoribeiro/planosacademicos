@@ -44,16 +44,16 @@
 	    'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
 	    'stacked'=>false, 
 		'items'=>array(
-			array('label'=>'Calendário', 'url'=>array('/site/calendar')),
+			//array('label'=>'Calendário', 'url'=>array('/site/calendar')),
 			array('label'=>'Planos de etapa', 'url'=>array('/pAPlanoEtapa/planos')),
 			array('label'=>'Meus planos de etapa', 'url'=>array('/pAPlanoEtapa/admin'),'visible'=>(!$isGuest)),
-			array('label'=>'Minhas avaliações', 'url'=>'#',
-	        	'items'=>array(
-	                         array('label'=>'Avaliações previstas', 'url'=>array('/PAAvaliacao/admin','marcada'=>'false'),'visible'=>(!$isGuest)),
-	                         array('label'=>'Avaliações marcadas', 'url'=>array('/PAAvaliacao/admin','marcada'=>'true'),'visible'=>(!$isGuest)),
-	                         array('label'=>'Histórico', 'url'=>array('/PAAvaliacao/adminHistorico'),'visible'=>(!$isGuest)),
-	                      ),'visible'=>(!$isGuest)
-	        ),
+			// array('label'=>'Minhas avaliações', 'url'=>'#',
+	  //       	'items'=>array(
+	  //                        array('label'=>'Avaliações previstas', 'url'=>array('/PAAvaliacao/admin','marcada'=>'false'),'visible'=>(!$isGuest)),
+	  //                        array('label'=>'Avaliações marcadas', 'url'=>array('/PAAvaliacao/admin','marcada'=>'true'),'visible'=>(!$isGuest)),
+	  //                        array('label'=>'Histórico', 'url'=>array('/PAAvaliacao/adminHistorico'),'visible'=>(!$isGuest)),
+	  //                     ),'visible'=>(!$isGuest)
+	  //       ),
 	        array('label'=>'Administração', 'items'=>array(
 	        			array('label'=>'Professor e Disciplinas', 'url'=>array('/professorDisciplina/admin')),
 		            	array('label'=>'Disciplina', 'url'=>array('/Disciplina/admin')),
