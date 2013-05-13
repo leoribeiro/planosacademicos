@@ -55,6 +55,7 @@
 	  //                     ),'visible'=>(!$isGuest)
 	  //       ),
 	        array('label'=>'Administração', 'items'=>array(
+	        			array('label'=>'Configurações', 'url'=>array('/pAVarGlobal/create')),
 	        			array('label'=>'Professor e Disciplinas', 'url'=>array('/professorDisciplina/admin')),
 		            	array('label'=>'Disciplina', 'url'=>array('/Disciplina/admin')),
 						array('label'=>'Departamento', 'url'=>array('/Departamento/admin')),

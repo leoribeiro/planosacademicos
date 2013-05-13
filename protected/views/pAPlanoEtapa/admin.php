@@ -15,13 +15,21 @@
 
 ?>
 
-<?php $this->widget('bootstrap.widgets.TbButton', array(
-    'label'=>'Novo Plano de etapa',
-    'type'=>'primary', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-    'size'=>'', // null, 'large', 'small' or 'mini'
-    'url'=>$this->createUrl('pAPlanoEtapa/create')
-)); ?>
-
+<?php 
+    $criteria = new CDbCriteria;
+    $criteria->compare('name','habpa');
+    $modelG = PAVarGlobal::model()->find($criteria);
+    $habilita = 'false';
+    if(is_null($modelG) || $modelG->value == 'Sim'){
+            $this->widget('bootstrap.widgets.TbButton', array(
+                'label'=>'Novo Plano de etapa',
+                'type'=>'primary', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
+                'size'=>'', // null, 'large', 'small' or 'mini'
+                'url'=>$this->createUrl('pAPlanoEtapa/create')
+            ));
+            $habilita = 'true';
+    }
+ ?>
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
 	'id'=>'paplano-etapa-grid',
     'type'=>'striped bordered',
@@ -43,6 +51,15 @@
 		'ano',
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
+            'template'=>'{view} {update} {delete}',
+            'buttons'=>array(
+                'update'=>array(
+                                'visible'=>$habilita,
+                        ),
+                'delete'=>array(
+                                'visible'=>$habilita,
+                        ),
+            ),
 		),
 	),
 )); ?>

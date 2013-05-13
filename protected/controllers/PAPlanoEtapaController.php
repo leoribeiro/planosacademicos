@@ -25,17 +25,31 @@ class PAPlanoEtapaController extends Controller
 	 */
 	public function accessRules()
 	{
+		$permU = 'false';
+		if(isset($_GET["id"]) && isset(Yii::app()->user->CDServidor)){
+			$serv = Yii::app()->user->CDServidor;
+			$c = new CDbCriteria;
+			$c->compare('Servidor_CDServidor',$serv);
+			$modelS = Professor::model()->find($c);
+			$criteria = new CDbCriteria;
+			$criteria->compare('id',$_GET["id"]);
+			$criteria->compare('professor',$modelS->CDProfessor);
+			$model = PAPlanoEtapa::model()->find($criteria);
+			if(!is_null($model)){
+				$permU = 'true';
+			}
+		}
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','planos'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','aula','listaPlanos','getPlano'),
+				'actions'=>array('aula','listaPlanos','getPlano'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','atualizaDisciplinas'),
+				'actions'=>array('admin','atualizaDisciplinas'),
 				//'users'=>array('admin'),
 				'roles'=>array('professor'),
 			),
@@ -43,6 +57,15 @@ class PAPlanoEtapaController extends Controller
 				'actions'=>array('admin','delete','atualizaDisciplinas'),
 				'users'=>array('admin'),
 			),
+			array('allow',
+                'actions'=>array('create','update','delete'),
+                'roles'=>array('habpa'),
+                'expression'=>$permU,
+            ),
+            array('allow',
+                'actions'=>array('create'),
+                'roles'=>array('habpa'),
+            ),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),

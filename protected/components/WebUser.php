@@ -18,6 +18,13 @@ class WebUser extends CWebUser
 
         $roles = $this->getState('roles');
 
+        $criteria = new CDbCriteria;
+        $criteria->compare('name','habpa');
+        $modelG = PAVarGlobal::model()->find($criteria);
+        if(is_null($modelG) || $modelG->value == 'Sim'){
+            $roles[] = 'habpa';
+        }
+
         foreach($roles as $role){
             if ($role === 'admin') {
                 return true; // admin role has access to everything
